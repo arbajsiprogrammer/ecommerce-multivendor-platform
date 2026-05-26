@@ -1,11 +1,21 @@
 import express from "express";
 import { db } from "../util/db.util.js";
-import { login, signup } from "../controller/auth.controller.js";
+import {
+  login,
+  logout,
+  profile,
+  signup,
+} from "../controller/auth.controller.js";
+import { verifyAuthToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/auth/signup", signup);
+router.post("/signup", signup);
 
-router.post("/auth/login", login);
+router.post("/login", login);
+
+router.post("/logout", verifyAuthToken, logout);
+
+router.post("/profile", verifyAuthToken, profile);
 
 export default router;
