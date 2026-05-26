@@ -2,7 +2,8 @@ import { verifyToken } from "../service/auth.service.js";
 
 const verifyAuthToken = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = req.cookies.token;
+    console.log(token, "inside verify Auth Token");
 
     if (!token) {
       return res
@@ -10,6 +11,7 @@ const verifyAuthToken = async (req, res, next) => {
         .json({ message: "invalid credentials...token not found" });
     }
     const user = await verifyToken(token);
+    console.log(user, "inside verify Auth Token");
 
     if (!user) {
       return res

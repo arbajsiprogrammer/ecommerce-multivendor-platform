@@ -12,15 +12,19 @@ const generateToken = async (payload) => {
 
 const verifyToken = async (token) => {
   try {
-    return await jwt.verify(token, secretKey);
+    console.log("secretKey", secretKey);
+    const user = await jwt.verify(token, secretKey);
+    console.log(user, "*********user inside verify token ");
+    return user;
   } catch (error) {
-    return null;
+    console.log(error);
   }
 };
 
 const hashPassword = async function (password) {
   try {
     const hashed = await bcrypt.hash(password, 10);
+    console.log(hashed, "inside hash password service");
     return hashed;
   } catch (error) {
     console.log(error);
@@ -30,9 +34,10 @@ const hashPassword = async function (password) {
 const verifyPassword = async function (password, hashed_password) {
   try {
     const isMatch = await bcrypt.compare(password, hashed_password);
+    console.log(isMatch, "inside verify password service");
     return isMatch;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 export { generateToken, verifyToken, hashPassword, verifyPassword };

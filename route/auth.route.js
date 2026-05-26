@@ -1,6 +1,7 @@
 import express from "express";
 import { db } from "../util/db.util.js";
 import {
+  deleteUser,
   login,
   logout,
   profile,
@@ -15,6 +16,8 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 router.post("/logout", verifyAuthToken, logout);
+
+router.delete("/delete", verifyAuthToken, deleteUser);
 
 router.post("/profile", verifyAuthToken, profile);
 

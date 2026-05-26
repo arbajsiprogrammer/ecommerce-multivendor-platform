@@ -28,6 +28,7 @@ const signup = async function (req, res) {
     }
 
     const hashedPassword = await hashPassword(user.password);
+    console.log("hashed password ", hashedPassword);
 
     const [rows] = await db.execute(
       `insert into ${user.role}s (first_name,last_name,password, phone_number  ) values (?,?,?,?)`,
@@ -51,12 +52,15 @@ const login = async function (req, res) {
       [phone_number],
     );
 
+    console.log(existing_user[0].id, "existing user inside login");
+
     if (existing_user.length == 0) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
-    const isMatch = await verifyPassword(password, existing_user.password);
-
+    console.log(existing_user[0].password, "hashed password inside login");
+    console.log(password, "normal password inside login");
+    const isMatch = await verifyPassword(password, existing_user[0].password);
+    console.log(isMatch, "is match inside login");
     if (!isMatch) {
       return res
         .status(400)
@@ -66,7 +70,7 @@ const login = async function (req, res) {
     const token = await generateToken({
       phone_number,
       role,
-      id: existing_user.id,
+      id: existing_user[0].id,
     });
 
     if (token) {
@@ -85,8 +89,7 @@ const login = async function (req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
-const logout = async function (req, res) {
+const deleteUser = async function (req, res) {
   try {
     const role = req.user.role;
     const phone_number = req.user.phone_number;
@@ -115,10 +118,11 @@ const logout = async function (req, res) {
   }
 };
 
-const profile = async function (req, res) {
+const logout = async function (req, res) {
   try {
-    const id = req.userId;
     const role = req.user.role;
+    const phone_number = req.user.phone_number;
+    const id = req.userId;
 
     const [existing_user] = await db.execute(
       `select * from ${role}s where id = ?`,
@@ -129,10 +133,43 @@ const profile = async function (req, res) {
       return res.status(400).json({ message: "user not found" });
     }
 
-    return res.status(200).json(existing_user);
+    // if (role) {
+    //   const row = await db.execute(
+    //     `delete from ${req.user.role}s where phone_number=?`,
+    //     [req.user.phone_number],
+    //   );
+    //   console.log(row);
+    // }
+    res.clearCookie("token");
+
+    return res.status(200).json({ message: "logout successfully " });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
-export { signup, login, logout, profile };
+
+const profile = async function (req, res) {
+  try {
+    const id = req.userId;
+    console.log(id);
+    const role = req.user.role;
+
+    const [existing_user] = await db.execute(
+      `select * from ${role}s where id = ?`,
+      [id],
+    );
+    console.log(existing_user, " inside profile ");
+    if (existing_user.length == 0) {
+      return res.status(400).json({ message: "user not found" });
+    }
+
+    return res.status(200).json(existing_user);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "error inside profile function..." + error.message });
+  }
+};
+export { signup, login, logout, profile, deleteUser };
