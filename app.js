@@ -8,6 +8,7 @@ import authRoute from "./route/auth.route.js";
 import adminRouter from "./route/admin.route.js";
 import vendorRouter from "./route/vendor.route.js";
 import customerRouter from "./route/customer.route.js";
+import cartRouter from "./route/cart.route.js";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/vendor", vendorRouter);
 app.use("/api/v1/customer", customerRouter);
+app.use("/api/v1/cart", cartRouter);
 
 app.get("/", (req, res) => {
   res.send("Server is running");
