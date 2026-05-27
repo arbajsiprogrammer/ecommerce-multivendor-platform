@@ -56,9 +56,10 @@ const getAllProducts = async function (req, res) {
 
     if (role == "vendor") {
       // showing only the vendors product
-      [products] = await db.execute(`select * from products where id = ?`, [
-        id,
-      ]);
+      [products] = await db.execute(
+        `select * from products where vendor_id = ?`,
+        [id],
+      );
     } else {
       // showing all products
       [products] = await db.execute(`select * from products`);
