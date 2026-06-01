@@ -4,8 +4,11 @@ import bcrypt from "bcryptjs";
 
 dotenv.config();
 const secretKey = process.env.JWT_SECRET_KEY;
+const refresh_secretKey = process.env.JWT_REFRESH_SECRET_KEY;
 console.log("secretKey", secretKey);
+console.log("refresh_secretKey", refresh_secretKey);
 
+// generating JWT access token
 const generateToken = async (payload) => {
   return await jwt.sign(payload, secretKey, { expiresIn: "1h" });
 };
@@ -21,6 +24,23 @@ const verifyToken = async (token) => {
   }
 };
 
+// generating JWT refresh token
+const generateRefreshToken = async (payload) => {
+  return await jwt.sign(payload, refresh_secretKey, { expiresIn: "7d" });
+};
+
+const verifyRefreshToken = async (token) => {
+  try {
+    console.log("refresh_secretKey", refresh_secretKey);
+    const user = await jwt.verify(token, refresh_secretKey);
+    console.log(user, "*********user inside verify refresh token ");
+    return user;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+// hashing password
 const hashPassword = async function (password) {
   try {
     const hashed = await bcrypt.hash(password, 10);
@@ -40,4 +60,12 @@ const verifyPassword = async function (password, hashed_password) {
     console.error(error);
   }
 };
-export { generateToken, verifyToken, hashPassword, verifyPassword };
+
+export {
+  generateToken,
+  verifyToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+  hashPassword,
+  verifyPassword,
+};

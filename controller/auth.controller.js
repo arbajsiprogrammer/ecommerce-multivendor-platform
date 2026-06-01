@@ -1,5 +1,6 @@
 import authSchema from "../model/authSchema.model.js";
 import {
+  generateRefreshToken,
   generateToken,
   hashPassword,
   verifyPassword,
@@ -66,6 +67,7 @@ const login = async function (req, res) {
     //     .json({ message: "Invalid credentials...password not match" });
     // }
 
+    // generating access token
     const token = await generateToken({
       phone_number,
       role,
@@ -76,10 +78,29 @@ const login = async function (req, res) {
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
-        maxAge: 1000 * 60 * 60 * 24,
+        maxAge: 1000 * 60 * 10, // 10 minutes
       });
     } else {
       return res.status(400).json({ message: "token generation failed" });
+    }
+
+    // generating refresh token
+    const refreshToken = await generateRefreshToken({
+      phone_number,
+      role,
+      id: existing_user[0].id,
+    });
+
+    if (refreshToken) {
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "refresh token generation failed" });
     }
 
     return res.status(200).json({ message: "Login successful" });
