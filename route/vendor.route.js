@@ -14,6 +14,7 @@ import {
   addImage,
   getImages,
   deleteImage,
+  updateOrderStatus,
 } from "../controller/vendor.controller.js";
 
 const router = express.Router();
@@ -35,5 +36,8 @@ router.delete("/products/sku/:id", verifyAuthToken, deleteSKU);
 router.post("/products/sku/:id/images", verifyAuthToken, addImage);
 router.get("/products/sku/:id/images", verifyAuthToken, getImages);
 router.delete("/products/sku/images/:id", verifyAuthToken, deleteImage);
+
+// update product status
+router.patch("/orders/:id", verifyAuthToken, updateOrderStatus);
 
 export default router;

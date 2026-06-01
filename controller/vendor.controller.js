@@ -467,6 +467,46 @@ const deleteImage = async function (req, res) {
   }
 };
 
+// order tracking PATCH /orders/:id/status
+const updateOrderStatus = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const { status, remarks } = req.body;
+    const role = req.user.role;
+
+    if (role != "vendor" && role != "admin") {
+      return res
+        .status(400)
+        .json({ message: "You are not authorized to update order status" });
+    }
+
+    const [existing_order] = await db.execute(
+      `select * from order_tracks where id = ?`,
+      [orderId],
+    );
+
+    if (existing_order.length == 0) {
+      return res.status(400).json({ message: "order not found" });
+    }
+
+    const [row] = await db.execute(
+      `update order_tracks set order_status = ?, remarks = ? where id = ?`,
+      [
+        status || existing_order[0].order_status,
+        remarks || existing_order[0].remarks,
+        orderId,
+      ],
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Order status updated successfully", row });
+  } catch (error) {
+    console.error("Error in updateOrderStatus:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export {
   // product
   getAllProducts,
@@ -485,4 +525,7 @@ export {
   addImage,
   getImages,
   deleteImage,
+
+  // update order status
+  updateOrderStatus,
 };

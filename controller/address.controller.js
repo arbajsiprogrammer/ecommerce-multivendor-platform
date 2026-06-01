@@ -57,6 +57,7 @@ const updatePickupAddress = async function (req, res) {
 
     const vendorId = req.user.id;
     const role = req.user.role;
+    const pickupAddressId = req.params.id;
 
     if (role !== "vendor") {
       return res
@@ -64,8 +65,8 @@ const updatePickupAddress = async function (req, res) {
         .json({ message: "Only vendor can update pickup address" });
     }
     const [row] = await db.execute(
-      "UPDATE pickup_address SET address = ?, state = ?, city = ?, pin_code = ? WHERE vendor_id = ?",
-      [address, state, city, pin_code, vendorId],
+      "UPDATE pickup_address SET address = ?, state = ?, city = ?, pin_code = ? WHERE vendor_id = ? AND id = ?",
+      [address, state, city, pin_code, vendorId, pickupAddressId],
     );
     return res
       .status(200)
@@ -81,15 +82,15 @@ const deletePickupAddress = async function (req, res) {
   try {
     const vendorId = req.user.id;
     const role = req.user.role;
-
+    const pickupAddressId = req.params.id;
     if (role !== "vendor") {
       return res
         .status(403)
         .json({ message: "Only vendor can delete pickup address" });
     }
     const [row] = await db.execute(
-      "DELETE FROM pickup_address WHERE vendor_id = ?",
-      [vendorId],
+      "DELETE FROM pickup_address WHERE vendor_id = ? AND id = ?",
+      [vendorId, pickupAddressId],
     );
     return res
       .status(200)
@@ -133,7 +134,7 @@ const getDeliveryAddress = async function (req, res) {
     const customerId = req.user.id;
     const role = req.user.role;
 
-    if (role !== "customer") {
+    if (role != "customer") {
       return res
         .status(403)
         .json({ message: "Only customer can get delivery address" });
@@ -156,15 +157,15 @@ const updateDeliveryAddress = async function (req, res) {
 
     const customerId = req.user.id;
     const role = req.user.role;
-
+    const deliveryAddressId = req.params.id;
     if (role != "customer") {
       return res
         .status(403)
         .json({ message: "Only customer can update delivery address" });
     }
     const [row] = await db.execute(
-      "UPDATE delivery_address SET address = ?, state = ?, city = ?, pin_code = ? WHERE customer_id = ?",
-      [address, state, city, pin_code, customerId],
+      "UPDATE delivery_address SET address = ?, state = ?, city = ?, pin_code = ? WHERE customer_id = ? AND id = ?",
+      [address, state, city, pin_code, customerId, deliveryAddressId],
     );
     return res
       .status(200)
@@ -180,16 +181,19 @@ const deleteDeliveryAddress = async function (req, res) {
   try {
     const customerId = req.user.id;
     const role = req.user.role;
+    const deliveryAddressId = req.params.id;
 
     if (role !== "customer") {
       return res
         .status(403)
         .json({ message: "Only customer can delete delivery address" });
     }
+
     const [row] = await db.execute(
-      "DELETE FROM delivery_address WHERE customer_id = ?",
-      [customerId],
+      "DELETE FROM delivery_address WHERE customer_id = ? and id = ?",
+      [customerId, deliveryAddressId],
     );
+
     return res
       .status(200)
       .json({ message: "Delivery address deleted successfully" });

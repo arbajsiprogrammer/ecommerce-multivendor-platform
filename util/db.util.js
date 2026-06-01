@@ -10,8 +10,8 @@ const connectDB = async function () {
     database: process.env.DB_NAME,
   });
   console.log(":db connected");
-  // const [data, fields] = await db.execute(`select * from vendors`);
-
+  const rows = await db.execute(`select * from vendors`);
+  // console.log(rows[0][0].id);
   // console.log(data);
   // console.log("fields", fields);
 };

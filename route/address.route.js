@@ -9,17 +9,18 @@ import {
   updateDeliveryAddress,
   updatePickupAddress,
 } from "../controller/address.controller.js";
+import { verifyAuthToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/pickup", getPickupAddress);
-router.post("/pickup", addPickupAddress);
-router.put("/pickup", updatePickupAddress);
-router.delete("/pickup", deletePickupAddress);
+router.get("/pickup", verifyAuthToken, getPickupAddress);
+router.post("/pickup", verifyAuthToken, addPickupAddress);
+router.put("/pickup/:id", verifyAuthToken, updatePickupAddress);
+router.delete("/pickup/:id", verifyAuthToken, deletePickupAddress);
 
-router.get("/delivery", getDeliveryAddress);
-router.post("/delivery", addDeliveryAddress);
-router.put("/delivery", updateDeliveryAddress);
-router.delete("/delivery", deleteDeliveryAddress);
+router.get("/delivery", verifyAuthToken, getDeliveryAddress);
+router.post("/delivery", verifyAuthToken, addDeliveryAddress);
+router.put("/delivery/:id", verifyAuthToken, updateDeliveryAddress);
+router.delete("/delivery/:id", verifyAuthToken, deleteDeliveryAddress);
 
 export default router;

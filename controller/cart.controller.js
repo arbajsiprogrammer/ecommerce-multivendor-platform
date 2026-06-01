@@ -21,10 +21,10 @@ const getCartProducts = async function (req, res) {
 const getCartItem = async function (req, res) {
   try {
     const customerId = req.user.id;
-    const { cart_item_id } = req.params;
+    const cart_item_id = req.params.id;
 
     const [existing_cart_item] = await db.execute(
-      `select * from cart_items where id = ${cart_item_id} )`,
+      `select * from cart_items where id = ${cart_item_id}`,
     );
     if (existing_cart_item.length == 0) {
       return res.status(404).json({ message: "Cart item not found" });
@@ -99,7 +99,8 @@ const addToCart = async function (req, res) {
 const updateCartItems = async function (req, res) {
   try {
     const customerId = req.user.id;
-    const { product_sku_id, quantity, cart_id } = req.body;
+    const cart_item_id = req.params.id;
+    const { product_skus_id, quantity, cart_id } = req.body;
 
     let [cart] = await db.execute(
       `select * from carts where id = ${cart_id} and customer_id = ${customerId}`,
@@ -113,7 +114,7 @@ const updateCartItems = async function (req, res) {
 
     // check if product skus is available or not in the inventory
     const [product_sku] = await db.execute(
-      `select * from product_skus where id = ${product_sku_id}`,
+      `select * from product_skus where id = ${product_skus_id}`,
     );
 
     if (product_sku.length == 0) {
@@ -132,7 +133,7 @@ const updateCartItems = async function (req, res) {
 
     // if current product sku is already exist
     const [existing_product_sku] = await db.execute(
-      `select * from cart_items where cart_id = ${cart[0].id} and product_skus_id = ${product_sku_id}`,
+      `select * from cart_items where cart_id = ${cart[0].id} and product_skus_id = ${product_skus_id}`,
     );
 
     if (existing_product_sku.length == 0) {
@@ -142,10 +143,10 @@ const updateCartItems = async function (req, res) {
     // update product sku quantity
     const [row] = await db.execute(
       `update cart_items set quantity = ? where cart_id = ? and product_skus_id = ?`,
-      [quantity, cart[0].id, product_sku_id],
+      [quantity, cart_item_id, product_skus_id],
     );
 
-    return res.status(200).json({ message: "Product quantity updated", row });
+    return res.status(200).json({ message: "Product updated", row });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: error });
@@ -159,7 +160,7 @@ const deleteCartItems = async function (req, res) {
     const { cart_item_id } = req.body;
 
     const [existing_cart_item] = await db.execute(
-      `select * from cart_items where id = ${cart_item_id})`,
+      `select * from cart_items where id = ${cart_item_id}`,
     );
     if (existing_cart_item.length == 0) {
       return res.status(404).json({ message: "Cart item not found" });
