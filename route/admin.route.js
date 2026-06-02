@@ -5,6 +5,10 @@ import {
   addCategory,
   deleteCategory,
   getAllCategories,
+  getAllCustomers,
+  getAllOrders,
+  getAllPayments,
+  getAllVendors,
   getCategory,
   updateCategory,
 } from "../controller/admin.controller.js";
@@ -16,5 +20,14 @@ router.get("/categories/:id", verifyAuthToken, getCategory);
 router.put("/categories/:id", verifyAuthToken, updateCategory);
 router.post("/categories", verifyAuthToken, addCategory);
 router.delete("/categories/:id", verifyAuthToken, deleteCategory);
+
+// GET /admin/vendors
+router.get("/vendors", verifyAuthToken, getAllVendors);
+// GET /admin/customers
+router.get("/customers", verifyAuthToken, getAllCustomers);
+// GET /admin/orders
+router.get("/customers", verifyAuthToken, getAllOrders);
+// GET /admin/payments
+router.get("/customers", verifyAuthToken, getAllPayments);
 
 export default router;

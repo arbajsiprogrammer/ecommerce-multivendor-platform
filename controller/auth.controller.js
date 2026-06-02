@@ -70,12 +70,12 @@ const login = async function (req, res) {
     const isMatch = await verifyPassword(password, existing_user[0].password);
 
     console.log(isMatch, "is match inside login");
-    // if (!isMatch) {
-    //  logger.error("Invalid credentials...password not match");
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Invalid credentials...password not match" });
-    // }
+    if (!isMatch) {
+      logger.error("Invalid credentials...password not match");
+      return res
+        .status(400)
+        .json({ message: "Invalid credentials...password not match" });
+    }
 
     // generating access token
     const token = await generateToken({
@@ -123,6 +123,7 @@ const login = async function (req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 const deleteUser = async function (req, res) {
   try {
     const role = req.user.role;

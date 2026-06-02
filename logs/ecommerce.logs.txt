@@ -25,3 +25,9 @@
 [2026-06-02 15:06:50] : INFO : payment splitted 
 [2026-06-02 15:06:51] : INFO :  tracking added on payments 
 [2026-06-02 15:06:13] : ERROR :  payment record exists for order id 1 
+[2026-06-02 16:06:21] : INFO : Token generation successful
+[2026-06-02 16:06:22] : INFO : Refresh token generation successful
+[2026-06-02 16:06:22] : INFO : Login successful
+[2026-06-02 16:06:51] : ERROR : error getting all vendors : rew is not defined
+[2026-06-02 16:06:27] : INFO : vendor data fetched
+[2026-06-02 16:06:68] : INFO : customers data fetched

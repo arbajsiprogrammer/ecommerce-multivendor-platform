@@ -1,6 +1,7 @@
 import logger from "../service/log.service.js";
 import { db } from "../util/db.util.js";
 
+// categories
 const getAllCategories = async function (req, res) {
   try {
     const role = req.user.role;
@@ -168,10 +169,91 @@ const deleteCategory = async function (req, res) {
   }
 };
 
+//vendors
+const getAllVendors = async function (req, res) {
+  try {
+    const role = req.user.role;
+    const userId = req.userId;
+
+    if (role != "admin") {
+      logger.warn(`user with id ${userId} tried to access getAllVendors`);
+      return res.status(400).json({ message: "you are not allowed" });
+    }
+
+    const [vendors] = await db.execute(`select * from vendors`);
+    logger.info("vendor data fetched");
+    return res.status(200).json(vendors);
+  } catch (error) {
+    logger.error("error getting all vendors : " + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+// customers
+const getAllCustomers = async function (req, res) {
+  try {
+    const role = req.user.role;
+    const userId = req.userId;
+
+    if (role != "admin") {
+      logger.warn(`user with id ${userId} tried to access getAllCustomers`);
+      return res.status(400).json({ message: "you are not allowed" });
+    }
+
+    const [customers] = await db.execute(`select * from customers`);
+    logger.info("customers data fetched");
+    return res.status(200).json(customers);
+  } catch (error) {
+    logger.error("error getting all vendors : " + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+// orders
+const getAllOrders = async function (req, res) {
+  try {
+    const role = req.user.role;
+    const userId = req.userId;
+
+    if (role != "admin") {
+      logger.warn(`user with id ${userId} tried to access getAllOrders`);
+      return res.status(400).json({ message: "you are not allowed" });
+    }
+
+    const [orders] = await db.execute(`select * from orders`);
+    logger.info("orders data fetched");
+    return res.status(200).json(orders);
+  } catch (error) {
+    logger.error("error getting all vendors : " + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+// payments
+const getAllPayments = async function (req, res) {
+  try {
+    const role = req.user.role;
+    const userId = req.userId;
+
+    if (role != "admin") {
+      logger.warn(`user with id ${userId} tried to access getAllPayments`);
+      return res.status(400).json({ message: "you are not allowed" });
+    }
+
+    const [payments] = await db.execute(`select * from payments`);
+    logger.info("payments data fetched");
+    return res.status(200).json(payments);
+  } catch (error) {
+    logger.error("error getting all vendors : " + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   getAllCategories,
   addCategory,
   getCategory,
   updateCategory,
   deleteCategory,
+  getAllVendors,
+  getAllCustomers,
+  getAllOrders,
+  getAllPayments,
 };
