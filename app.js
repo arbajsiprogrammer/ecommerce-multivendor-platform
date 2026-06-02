@@ -26,6 +26,7 @@ app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/address", addressRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/review", reviewRouter);
+
 app.get("/", (req, res) => {
   res.send("Server is running");
 });

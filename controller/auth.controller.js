@@ -5,6 +5,7 @@ import {
   hashPassword,
   verifyPassword,
 } from "../service/auth.service.js";
+import logger from "../service/log.service.js";
 import { db } from "../util/db.util.js";
 
 const signup = async function (req, res) {
@@ -15,6 +16,7 @@ const signup = async function (req, res) {
     // validating the input
     const result = authSchema.validate(user);
     if (result.error) {
+      logger.error(result.error.details[0].message + " in signup function");
       return res.status(400).json({ message: result.error.details[0].message });
     }
 
@@ -25,6 +27,7 @@ const signup = async function (req, res) {
     );
 
     if (existing_user.length > 0) {
+      logger.error("User already exist");
       return res.status(400).json({ message: "User already exist" });
     }
 
@@ -36,10 +39,11 @@ const signup = async function (req, res) {
       [user.first_name, user.last_name, hashedPassword, user.phone_number],
     );
     console.log(rows);
-
+    logger.info("User created successfully");
     return res.status(200).json({ message: "User created successfully" });
   } catch (error) {
     console.error(error);
+    logger.error("Internal server error");
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -55,6 +59,7 @@ const login = async function (req, res) {
     console.log(existing_user, "existing user inside login");
 
     if (existing_user.length == 0) {
+      logger.error("Invalid credentials...user not found");
       return res.status(400).json({ message: "Invalid credentials" });
     }
     console.log(existing_user[0].password, "hashed password inside login");
@@ -62,6 +67,7 @@ const login = async function (req, res) {
     const isMatch = await verifyPassword(password, existing_user[0].password);
     console.log(isMatch, "is match inside login");
     // if (!isMatch) {
+    //  logger.error("Invalid credentials...password not match");
     //   return res
     //     .status(400)
     //     .json({ message: "Invalid credentials...password not match" });
@@ -80,7 +86,9 @@ const login = async function (req, res) {
         secure: true,
         maxAge: 1000 * 60 * 10, // 10 minutes
       });
+      logger.info("Token generation successful");
     } else {
+      logger.error("Token generation failed");
       return res.status(400).json({ message: "token generation failed" });
     }
 
@@ -97,15 +105,17 @@ const login = async function (req, res) {
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       });
+      logger.info("Refresh token generation successful");
     } else {
+      logger.error("Refresh token generation failed");
       return res
         .status(400)
         .json({ message: "refresh token generation failed" });
     }
-
+    logger.info("Login successful");
     return res.status(200).json({ message: "Login successful" });
   } catch (error) {
-    console.error(error);
+    logger.error("Internal server error");
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -121,6 +131,7 @@ const deleteUser = async function (req, res) {
     );
 
     if (existing_user.length == 0) {
+      logger.error("User not found");
       return res.status(400).json({ message: "user not found" });
     }
 
@@ -130,10 +141,12 @@ const deleteUser = async function (req, res) {
         [req.user.phone_number],
       );
       console.log(row);
-      return res.status(200).json({ message: "logout successfully " });
+
+      logger.info("User deleted successfully");
+      return res.status(200).json({ message: "deleted successfully " });
     }
   } catch (error) {
-    console.log(error);
+    logger.error("Internal server error");
     return res.status(500).json({ message: error.message });
   }
 };
@@ -150,6 +163,7 @@ const logout = async function (req, res) {
     );
 
     if (existing_user.length == 0) {
+      logger.error("User not found");
       return res.status(400).json({ message: "user not found" });
     }
 
@@ -161,10 +175,13 @@ const logout = async function (req, res) {
     //   console.log(row);
     // }
     res.clearCookie("token");
+    res.clearCookie("refreshToken");
+    logger.info("Logout successful");
 
     return res.status(200).json({ message: "logout successfully " });
   } catch (error) {
     console.log(error);
+    logger.error("Internal server error " + error.message);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -181,11 +198,14 @@ const profile = async function (req, res) {
     );
     console.log(existing_user, " inside profile ");
     if (existing_user.length == 0) {
+      logger.error("User not found");
       return res.status(400).json({ message: "user not found" });
     }
 
+    logger.info("Profile data retrieved successfully");
     return res.status(200).json(existing_user);
   } catch (error) {
+    logger.error("Internal server error " + error.message);
     console.log(error);
     return res
       .status(500)

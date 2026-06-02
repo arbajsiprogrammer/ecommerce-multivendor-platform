@@ -1,4 +1,5 @@
 import { productSchema } from "../model/productSchema.model.js";
+import logger from "../service/log.service.js";
 import { db } from "../util/db.util.js";
 
 // products API's
@@ -9,6 +10,7 @@ const addProduct = async function (req, res) {
     const userId = req.userId;
 
     if (!product) {
+      logger.error("Product details missing in request body");
       return res.status(400).json({ message: "product details missing" });
     }
 
@@ -18,6 +20,9 @@ const addProduct = async function (req, res) {
     });
 
     if (result.error) {
+      logger.error(
+        `Product validation failed: ${result.error.details[0].message}`,
+      );
       return res.status(400).json({ message: result.error.details[0].message });
     }
 
@@ -38,10 +43,12 @@ const addProduct = async function (req, res) {
       ],
     );
 
+    logger.info(`Product added successfully with ID: ${row.insertId}`);
     return res
       .status(200)
       .json({ message: "product added successfully ", row });
   } catch (error) {
+    logger.error(`Error adding product: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -66,9 +73,12 @@ const getAllProducts = async function (req, res) {
     }
 
     console.log(products, " all products ");
-
+    logger.info(
+      `Products retrieved successfully for user ID: ${id} with role: ${role}`,
+    );
     return res.status(200).json(products);
   } catch (error) {
+    logger.error(`Error retrieving products: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -90,9 +100,13 @@ const getProduct = async function (req, res) {
         [id, productId],
       );
     }
-    console.log(products, "all products ");
+    console.log(products, " product ");
+    logger.info(
+      `Product retrieved successfully for user ID: ${id} with role: ${role} and product ID: ${productId}`,
+    );
     return res.status(200).json(products);
   } catch (error) {
+    logger.error(`Error retrieving product: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -115,9 +129,15 @@ const deleteProduct = async function (req, res) {
       );
     }
 
-    console.log(products, "all products ");
+    logger.info(
+      `Product retrieved successfully for user ID: ${id} with role: ${role} and product ID: ${productId}`,
+    );
+    console.log(products, " product ");
 
     if (!products) {
+      logger.error(
+        `Product not found for user ID: ${id} with role: ${role} and product ID: ${productId}`,
+      );
       return res.status(400).json({ message: "product not found" });
     }
 
@@ -125,9 +145,12 @@ const deleteProduct = async function (req, res) {
       `delete from products where vendor_id = ? and id = ?`,
       [id, productId],
     );
-
+    logger.info(
+      `Product deleted successfully for user ID: ${id} with role: ${role} and product ID: ${productId}`,
+    );
     return res.status(200).json({ message: "product deleted ", row });
   } catch (error) {
+    logger.error(`Error deleting product: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -154,6 +177,9 @@ const updateProduct = async function (req, res) {
     console.log(existing_products, " existing_products in update product ");
 
     if (!existing_products) {
+      logger.error(
+        `Product not found for update: User ID: ${id}, Role: ${role}, Product ID: ${productId}`,
+      );
       return res.status(400).json({ message: " product not found " });
     }
 
@@ -175,9 +201,12 @@ const updateProduct = async function (req, res) {
         productId,
       ],
     );
-
+    logger.info(
+      `Product updated successfully for user ID: ${id} with role: ${role} and product ID: ${productId}`,
+    );
     return res.status(200).json({ message: "product updated ", row });
   } catch (error) {
+    logger.error(`Error updating product: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -204,7 +233,9 @@ const getAllSKU = async function (req, res) {
     }
 
     console.log(products, " all sku products ");
-
+    logger.info(
+      `Product SKUs retrieved successfully for user ID: ${id} with role: ${role}`,
+    );
     return res.status(200).json(products);
   } catch (error) {
     console.log(error);
@@ -231,11 +262,17 @@ const getSKU = async function (req, res) {
 
     console.log(product, " SKU  ");
     if (!product) {
+      logger.error(
+        `Product SKU not found: User ID: ${id}, Role: ${role}, SKU ID: ${productId}`,
+      );
       return res.status(400).json({ message: " product not found " });
     }
-
+    logger.info(
+      `Product SKU retrieved successfully for user ID: ${id} with role: ${role} and SKU ID: ${productId}`,
+    );
     return res.status(200).json(product);
   } catch (error) {
+    logger.error(`Error retrieving product SKU: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -249,6 +286,7 @@ const addSKU = async function (req, res) {
     const userId = req.userId;
 
     if (!product) {
+      logger.error("Product SKU details missing in request body");
       return res.status(400).json({ message: "product details missing" });
     }
 
@@ -266,10 +304,14 @@ const addSKU = async function (req, res) {
       ],
     );
 
+    logger.info(
+      `Product SKU added successfully for user ID: ${id} with role: ${role}`,
+    );
     return res
       .status(200)
       .json({ message: " product added successfully ", row });
   } catch (error) {
+    logger.error(`Error adding product SKU: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -296,6 +338,9 @@ const updateSKU = async function (req, res) {
     console.log(existing_products, " existing_products in update product ");
 
     if (!existing_products) {
+      logger.error(
+        `Product SKU not found for update: User ID: ${id}, Role: ${role}, SKU ID: ${skuId}`,
+      );
       return res.status(400).json({ message: " product not found " });
     }
 
@@ -313,9 +358,12 @@ const updateSKU = async function (req, res) {
         skuId,
       ],
     );
-
+    logger.info(
+      `product SKU updated successfully for user ID: ${id} with role: ${role} and SKU ID: ${skuId}`,
+    );
     return res.status(200).json({ message: "product updated ", row });
   } catch (error) {
+    logger.error(`Error updating product SKU: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -340,15 +388,21 @@ const deleteSKU = async function (req, res) {
     console.log(product, " sku in delete sku ");
 
     if (!product) {
+      logger.error(
+        `Product SKU not found for deletion: User ID: ${id}, Role: ${role}, SKU ID: ${skuId}`,
+      );
       return res.status(400).json({ message: "sku not found" });
     }
 
     const [row] = await db.execute(`delete from product_skus where id = ?`, [
       skuId,
     ]);
-
+    logger.info(
+      `Product SKU deleted successfully for user ID: ${id} with role: ${role} and SKU ID: ${skuId}`,
+    );
     return res.status(200).json({ message: "product deleted ", row });
   } catch (error) {
+    logger.error(`Error deleting product SKU: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -363,10 +417,12 @@ const addImage = async function (req, res) {
     console.log(image_url, " image_url in add image ", product_sku_ID);
 
     if (!image_url) {
+      logger.error("Image URL missing in request body");
       return res.status(400).json({ message: "image url missing" });
     }
 
     if (!product_sku_ID) {
+      logger.error("Product SKU ID missing in request parameters");
       return res.status(400).json({ message: "product sku ID missing" });
     }
 
@@ -376,9 +432,12 @@ const addImage = async function (req, res) {
     );
 
     console.log(row);
-
+    logger.info(
+      `Image added successfully for Product SKU ID: ${product_sku_ID} with Image URL: ${image_url}`,
+    );
     return res.status(200).json({ message: " image added successfully " });
   } catch (error) {
+    logger.error(`Error adding image: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -389,6 +448,7 @@ const getImages = async function (req, res) {
     const product_sku_ID = req.params.id;
 
     if (!product_sku_ID) {
+      logger.error("Product SKU ID missing in request parameters");
       return res.status(400).json({ message: "product skus id missing" });
     }
 
@@ -396,9 +456,12 @@ const getImages = async function (req, res) {
       `select * from images where product_skus_id = ?`,
       [product_sku_ID],
     );
-
+    logger.info(
+      `Images retrieved successfully for Product SKU ID: ${product_sku_ID}`,
+    );
     return res.status(200).json(row);
   } catch (error) {
+    logger.error(`Error retrieving images: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error.message });
   }
@@ -411,12 +474,16 @@ const deleteImage = async function (req, res) {
     const product_sku_image_ID = req.params.id;
 
     if (req.user.role != "vendor" && req.user.role != "admin") {
+      logger.error(
+        `Unauthorized image deletion attempt by user ID: ${req.user.id} with role: ${role}`,
+      );
       return res
         .status(400)
         .json({ message: "you are not allowed to delete image " });
     }
 
     if (!product_sku_image_ID) {
+      logger.error("Product SKU Image ID missing in request parameters");
       return res.status(400).json({ message: "id is missing" });
     }
 
@@ -426,6 +493,9 @@ const deleteImage = async function (req, res) {
     );
 
     if (existing_image.length == 0) {
+      logger.error(
+        `Image not found for deletion: Image ID: ${product_sku_image_ID}`,
+      );
       return res
         .status(400)
         .json({ message: `image with id ${product_sku_image_ID} not found ` });
@@ -459,9 +529,12 @@ const deleteImage = async function (req, res) {
         product_sku_image_ID,
       ]);
     }
-
+    logger.info(
+      `Image deleted successfully for Image ID: ${product_sku_image_ID} by user ID: ${req.user.id} with role: ${role}`,
+    );
     return res.status(200).json({ message: "image deleted successfully " });
   } catch (error) {
+    logger.error(`Error deleting image: ${error.message}`);
     console.log(error);
     return res.status(500).json({ message: error });
   }
@@ -486,6 +559,7 @@ const updateOrderStatus = async (req, res) => {
     );
 
     if (existing_order.length == 0) {
+      logger.error(`Order not found for update: Order ID: ${orderId}`);
       return res.status(400).json({ message: "order not found" });
     }
 
@@ -497,11 +571,14 @@ const updateOrderStatus = async (req, res) => {
         orderId,
       ],
     );
-
+    logger.info(
+      `Order status updated successfully for Order ID: ${orderId} by user ID: ${req.user.id} with role: ${role}`,
+    );
     return res
       .status(200)
       .json({ message: "Order status updated successfully", row });
   } catch (error) {
+    logger.error(`Error updating order status: ${error.message}`);
     console.error("Error in updateOrderStatus:", error);
     res.status(500).json({ message: "Internal server error" });
   }

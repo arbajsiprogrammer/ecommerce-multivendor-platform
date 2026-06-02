@@ -1,3 +1,4 @@
+import logger from "../service/log.service.js";
 import { db } from "../util/db.util.js";
 
 const addReview = async (req, res) => {
@@ -13,6 +14,9 @@ const addReview = async (req, res) => {
     );
 
     if (product.length == 0) {
+      logger.warn(
+        `Customer with id ${customerId} attempted to add a review for product ${product_id} without purchasing it.`,
+      );
       return res
         .status(400)
         .json({ message: " You are not allowed to add review " });
@@ -30,9 +34,13 @@ const addReview = async (req, res) => {
         product[0].order_id,
       ],
     );
+    logger.info(
+      `Customer with id ${customerId} added a review for product ${product_id}. Review ID: ${row.insertId}`,
+    ); // Log the review addition
     console.log(row, " review row inside addReview");
     return res.status(200).json({ message: "Review added successfully" });
   } catch (error) {
+    logger.error(`Error in addReview: ${error.message}`);
     console.error("Error in addReview:", error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -47,10 +55,15 @@ const getAllReviews = async (req, res) => {
       [product_id, product_id],
     );
     if (reviews.length == 0) {
+      logger.warn(`No reviews found for product with id ${product_id}.`);
       return res.status(400).json({ message: "No reviews found " });
     }
+    logger.info(
+      `Reviews retrieved successfully for product with id ${product_id}.`,
+    );
     return res.status(200).json({ reviews });
   } catch (error) {
+    logger.error(`Error in getAllReviews: ${error.message}`);
     console.error("Error in getAllReviews:", error);
     res.status(500).json({ message: "Internal server error" });
   }
