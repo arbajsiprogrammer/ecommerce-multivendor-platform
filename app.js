@@ -11,6 +11,7 @@ import customerRouter from "./route/customer.route.js";
 import cartRouter from "./route/cart.route.js";
 import addressRouter from "./route/address.route.js";
 import orderRouter from "./route/order.route.js";
+import reviewRouter from "./route/review.route.js";
 
 const app = express();
 app.use(express.json());
@@ -24,7 +25,7 @@ app.use("/api/v1/customer", customerRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/address", addressRouter);
 app.use("/api/v1/order", orderRouter);
-
+app.use("/api/v1/review", reviewRouter);
 app.get("/", (req, res) => {
   res.send("Server is running");
 });

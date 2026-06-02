@@ -1,4 +1,4 @@
-import { verifyToken } from "../service/auth.service.js";
+import { verifyRefreshToken, verifyToken } from "../service/auth.service.js";
 
 const verifyAuthToken = async (req, res, next) => {
   try {
