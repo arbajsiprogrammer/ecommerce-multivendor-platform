@@ -6,14 +6,17 @@ const getAllCategories = async function (req, res) {
     const role = req.user.role;
 
     console.log(role, "inside get all categories...");
+
     if (role !== "admin") {
       logger.error("user must be admin to access categories");
       return res.status(400).json({ message: "user must be admin" });
     }
 
     const [categories] = await db.execute(`select * from categories`);
+
     console.log(categories, "inside categories..");
     logger.info("categories fetched successfully");
+
     return res.status(200).json(categories);
   } catch (error) {
     logger.error("error fetching categories: " + error.message);
@@ -27,6 +30,7 @@ const getCategory = async function (req, res) {
     const categoryId = req.params.id;
 
     console.log(role, "inside get category...");
+
     if (role !== "admin") {
       logger.error("user must be admin to access category");
       return res.status(400).json({ message: "user must be admin" });
@@ -36,8 +40,10 @@ const getCategory = async function (req, res) {
       `select * from categories where id = ?`,
       [categoryId],
     );
+
     logger.info("category fetched successfully");
     console.log(category, "inside get category..");
+
     return res.status(200).json(category);
   } catch (error) {
     logger.error("error fetching category: " + error.message);
@@ -114,6 +120,7 @@ const addCategory = async function (req, res) {
       `insert into categories (category_name, parent_category_id) values (?,?)`,
       [category.category_name || "temp", category.parent_category_id || null],
     );
+
     logger.info("category added successfully");
     console.log(row, "row ");
 
@@ -153,6 +160,7 @@ const deleteCategory = async function (req, res) {
     ]);
 
     logger.info("category deleted successfully with id: " + categoryId);
+
     return res.status(200).json(category);
   } catch (error) {
     logger.error("error deleting category: " + error.message);

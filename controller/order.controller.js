@@ -23,6 +23,7 @@ const addItemToOrder = async (req, res) => {
       logger.error(
         `Cart with id ${cart_id} not found for customer id ${customerId}`,
       );
+
       return res.status(404).json({ message: "Cart not found" });
     }
 
@@ -36,6 +37,7 @@ const addItemToOrder = async (req, res) => {
       logger.error(
         `Cart with id ${cart_id} is empty for customer id ${customerId}`,
       );
+
       return res.status(400).json({ message: "Cart is empty" });
     }
 
@@ -46,10 +48,12 @@ const addItemToOrder = async (req, res) => {
         "SELECT price FROM product_skus WHERE id = ?",
         [item.product_skus_id],
       );
+
       if (price_row.length == 0) {
         await db.execute(`rollback to orderStartPoint`);
         return res.status(404).json({ message: "Product SKU not found" });
       }
+
       const price = price_row[0].price;
 
       totalAmount += item.quantity * price;
@@ -69,14 +73,20 @@ const addItemToOrder = async (req, res) => {
       `insert into orders (customer_id, total_amount, delivery_charges) values (?, ?, ?)`,
       [customerId, totalAmount, delivery_charges],
     );
+
     console.log(row, " created order inside addItemToOrder ");
+
     const order_id = row.insertId;
 
     // creating order items for current order
     for (const item of cartItems) {
       // seller of the current order item
+      // const [product_name_row] = await db.execute(
+      //   `select  from products where id = (select product_id from product_skus where id = ?)`,
+      //   [product_sku_row[0].id],
+      // );
       const [vendor_row] = await db.execute(
-        `select vendor_id from products where id = (select product_id from product_skus where id = ?)`,
+        `select vendor_id, product_name from products where id = (select product_id from product_skus where id = ?)`,
         [item.product_skus_id],
       );
       console.log(vendor_row, " vendor row inside addItemToOrder");
@@ -90,6 +100,7 @@ const addItemToOrder = async (req, res) => {
       }
 
       const vendor_id = vendor_row[0].vendor_id;
+      const product_name = vendor_row[0].product_name;
 
       console.log(vendor_id, " vendor id inside addItemToOrder");
 
@@ -98,6 +109,7 @@ const addItemToOrder = async (req, res) => {
         `select id from pickup_address where vendor_id = ?`,
         [vendor_id],
       );
+
       console.log(pickupAddressRow, " pickup address row ");
       if (pickupAddressRow.length == 0) {
         logger.error(
@@ -106,6 +118,7 @@ const addItemToOrder = async (req, res) => {
         await db.execute(`rollback to orderStartPoint`);
         return res.status(404).json({ message: "Pickup address not found" });
       }
+
       const pickup_address_id = pickupAddressRow[0].id;
       console.log(
         pickup_address_id,
@@ -118,6 +131,7 @@ const addItemToOrder = async (req, res) => {
         [customerId],
       );
       console.log(deliveryAddressRow, " delivery address row ");
+
       if (deliveryAddressRow.length == 0) {
         logger.error(
           `Delivery address not found for customer id ${customerId} in order id ${order_id}`,
@@ -126,6 +140,7 @@ const addItemToOrder = async (req, res) => {
         return res.status(404).json({ message: "Delivery address not found" });
       }
       const delivery_address_id = deliveryAddressRow[0].id;
+
       console.log(
         delivery_address_id,
         " delivery address id inside addItemToOrder",
@@ -148,12 +163,6 @@ const addItemToOrder = async (req, res) => {
 
       const price = product_sku_row[0].price;
 
-      const [product_name_row] = await db.execute(
-        `select product_name from products where id = (select product_id from product_skus where id = ?)`,
-        [product_sku_row[0].id],
-      );
-      const product_name = product_name_row[0].product_name;
-
       const amount = quantity * price;
 
       const [row] = await db.execute(
@@ -170,6 +179,7 @@ const addItemToOrder = async (req, res) => {
           price,
         ],
       );
+
       console.log(row, " order item inside addItemToOrder");
     }
 
@@ -206,12 +216,16 @@ const getAllOrders = async (req, res) => {
       `select id, customer_id, delivery_charges,total_amount from orders where customer_id = ?`,
       [customerId],
     );
+
     console.log(orders, " all orders for customer id inside getAllOrders");
+
     if (orders.length == 0) {
       logger.error(`No orders found for customer id ${customerId}`);
       return res.status(400).json({ message: "No orders found " });
     }
+
     logger.info(`Orders retrieved successfully for customer id ${customerId}`);
+
     return res.status(200).json({ orders: orders });
   } catch (error) {
     logger.error(`Error in getAllOrders: ${error.message}`);
@@ -231,6 +245,7 @@ const getOrder = async (req, res) => {
       `select id, customer_id, total_amount, delivery_charges from orders where id = ? and customer_id = ?`,
       [orderId, customerId],
     );
+
     console.log(order, " order details for order id inside getOrder");
 
     if (order.length == 0) {
@@ -239,13 +254,16 @@ const getOrder = async (req, res) => {
       );
       return res.status(400).json({ message: "No orders found " });
     }
+
     logger.info(
       `Order details retrieved successfully for order id ${orderId} and customer id ${customerId}`,
     );
+
     return res.status(200).json({ order: order });
   } catch (error) {
     logger.error(`Error in getOrder: ${error.message}`);
     console.log("Error in getOrder:", error);
+
     res.status(500).json({ message: "Internal server error" });
   }
 };

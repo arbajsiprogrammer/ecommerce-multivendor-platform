@@ -1,0 +1,27 @@
+[2026-06-02 12:06:20] : INFO : Token generation successful
+[2026-06-02 12:06:20] : INFO : Refresh token generation successful
+[2026-06-02 12:06:20] : INFO : Login successful
+[2026-06-02 12:06:73] : INFO : Reviews retrieved successfully for product with id 1.
+[2026-06-02 15:06:43] : INFO :  payment fetched successfully 
+[2026-06-02 15:06:47] : INFO : no payment available with id 1000
+[2026-06-02 15:06:01] : INFO : payment created with id 11
+[2026-06-02 15:06:03] : ERROR : Error inside addPayment Unknown column 'commision_charged' in 'field list'
+[2026-06-02 15:06:58] : INFO : payment created with id 12
+[2026-06-02 15:06:61] : INFO : payment splitted 
+[2026-06-02 15:06:48] : INFO : payment created with id 13
+[2026-06-02 15:06:49] : INFO : payment splitted 
+[2026-06-02 15:06:37] : INFO : payment created with id 14
+[2026-06-02 15:06:39] : INFO : payment splitted 
+[2026-06-02 15:06:76] : INFO : payment created with id 15
+[2026-06-02 15:06:77] : INFO : payment splitted 
+[2026-06-02 15:06:03] : INFO : payment created with id 16
+[2026-06-02 15:06:04] : INFO : payment splitted 
+[2026-06-02 15:06:90] : INFO : payment created with id 17
+[2026-06-02 15:06:92] : INFO : payment splitted 
+[2026-06-02 15:06:93] : ERROR : Error inside addPayment You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'n' at line 1
+[2026-06-02 15:06:52] : INFO : payment created with id 18
+[2026-06-02 15:06:53] : INFO : payment splitted 
+[2026-06-02 15:06:48] : INFO : payment created with id 19
+[2026-06-02 15:06:50] : INFO : payment splitted 
+[2026-06-02 15:06:51] : INFO :  tracking added on payments 
+[2026-06-02 15:06:13] : ERROR :  payment record exists for order id 1 

@@ -82,6 +82,7 @@ const getProductsByPage = async function (req, res) {
       `select * from products
       limit ${limit} offset ${offset}`,
     );
+
     logger.info(`fetched products for page ${page} with limit ${limit}`);
     return res.status(200).json(row);
   } catch (error) {

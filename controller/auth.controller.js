@@ -28,7 +28,9 @@ const signup = async function (req, res) {
 
     if (existing_user.length > 0) {
       logger.error("User already exist");
-      return res.status(400).json({ message: "User already exist" });
+      return res
+        .status(400)
+        .json({ message: "User already exist...please log in " });
     }
 
     const hashedPassword = await hashPassword(user.password);
@@ -64,7 +66,9 @@ const login = async function (req, res) {
     }
     console.log(existing_user[0].password, "hashed password inside login");
     console.log(password, "normal password inside login");
+
     const isMatch = await verifyPassword(password, existing_user[0].password);
+
     console.log(isMatch, "is match inside login");
     // if (!isMatch) {
     //  logger.error("Invalid credentials...password not match");

@@ -10,7 +10,7 @@ console.log("refresh_secretKey", refresh_secretKey);
 
 // generating JWT access token
 const generateToken = async (payload) => {
-  return await jwt.sign(payload, secretKey, { expiresIn: "1h" });
+  return await jwt.sign(payload, secretKey, { expiresIn: "10m" });
 };
 
 const verifyToken = async (token) => {

@@ -236,6 +236,7 @@ const getAllSKU = async function (req, res) {
     logger.info(
       `Product SKUs retrieved successfully for user ID: ${id} with role: ${role}`,
     );
+
     return res.status(200).json(products);
   } catch (error) {
     console.log(error);
@@ -261,15 +262,18 @@ const getSKU = async function (req, res) {
     }
 
     console.log(product, " SKU  ");
+
     if (!product) {
       logger.error(
         `Product SKU not found: User ID: ${id}, Role: ${role}, SKU ID: ${productId}`,
       );
       return res.status(400).json({ message: " product not found " });
     }
+
     logger.info(
       `Product SKU retrieved successfully for user ID: ${id} with role: ${role} and SKU ID: ${productId}`,
     );
+
     return res.status(200).json(product);
   } catch (error) {
     logger.error(`Error retrieving product SKU: ${error.message}`);
