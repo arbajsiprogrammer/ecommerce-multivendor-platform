@@ -12,6 +12,7 @@ import {
   getCategory,
   updateCategory,
 } from "../controller/admin.controller.js";
+import deleteAccessToken from "../middleware/temp.middleware.js";
 
 const router = express.Router();
 
@@ -26,8 +27,8 @@ router.get("/vendors", verifyAuthToken, getAllVendors);
 // GET /admin/customers
 router.get("/customers", verifyAuthToken, getAllCustomers);
 // GET /admin/orders
-router.get("/customers", verifyAuthToken, getAllOrders);
+router.get("/orders", verifyAuthToken, getAllOrders);
 // GET /admin/payments
-router.get("/customers", verifyAuthToken, getAllPayments);
+router.get("/payments", verifyAuthToken, getAllPayments);
 
 export default router;

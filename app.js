@@ -4,30 +4,13 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import { connectDB } from "./util/db.util.js";
 import { db } from "./util/db.util.js";
-import authRoute from "./route/auth.route.js";
-import adminRouter from "./route/admin.route.js";
-import vendorRouter from "./route/vendor.route.js";
-import customerRouter from "./route/customer.route.js";
-import cartRouter from "./route/cart.route.js";
-import addressRouter from "./route/address.route.js";
-import orderRouter from "./route/order.route.js";
-import reviewRouter from "./route/review.route.js";
-import paymentRouter from "./route/payment.route.js";
-
+import apiRoute from "./route/api.route.js";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
 // middleware
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/admin", adminRouter);
-app.use("/api/v1/vendor", vendorRouter);
-app.use("/api/v1/customer", customerRouter);
-app.use("/api/v1/cart", cartRouter);
-app.use("/api/v1/address", addressRouter);
-app.use("/api/v1/order", orderRouter);
-app.use("/api/v1/review", reviewRouter);
-app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1", apiRoute);
 
 app.get("/", (req, res) => {
   res.send("Server is running");

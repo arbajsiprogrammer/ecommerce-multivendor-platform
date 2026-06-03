@@ -31,3 +31,57 @@
 [2026-06-02 16:06:51] : ERROR : error getting all vendors : rew is not defined
 [2026-06-02 16:06:27] : INFO : vendor data fetched
 [2026-06-02 16:06:68] : INFO : customers data fetched
+[2026-06-03 11:06:31] : ERROR : Invalid credentials...password not match
+[2026-06-03 11:06:47] : INFO : Token generation successful
+[2026-06-03 11:06:48] : INFO : Refresh token generation successful
+[2026-06-03 11:06:48] : INFO : Login successful
+[2026-06-03 11:06:00] : INFO : customers data fetched
+[2026-06-03 11:06:20] : INFO : customers data fetched
+[2026-06-03 11:06:45] : INFO : customers data fetched
+[2026-06-03 11:06:68] : INFO : customers data fetched
+[2026-06-03 11:06:59] : INFO : customers data fetched
+[2026-06-03 11:06:78] : INFO : customers data fetched
+[2026-06-03 11:06:01] : INFO : customers data fetched
+[2026-06-03 11:06:77] : ERROR : error getting all vendors : Cannot read properties of undefined (reading 'role')
+[2026-06-03 11:06:07] : INFO : Token generation successful
+[2026-06-03 11:06:07] : INFO : Refresh token generation successful
+[2026-06-03 11:06:07] : INFO : Login successful
+[2026-06-03 11:06:60] : ERROR : error getting all vendors : Cannot read properties of undefined (reading 'role')
+[2026-06-03 11:06:47] : INFO : Token generation successful
+[2026-06-03 11:06:47] : INFO : Refresh token generation successful
+[2026-06-03 11:06:47] : INFO : Login successful
+[2026-06-03 11:06:30] : ERROR : error getting all vendors : Cannot read properties of undefined (reading 'role')
+[2026-06-03 11:06:68] : INFO : Token generation successful
+[2026-06-03 11:06:68] : INFO : Refresh token generation successful
+[2026-06-03 11:06:68] : INFO : Login successful
+[2026-06-03 11:06:20] : ERROR : error getting all vendors : Cannot read properties of undefined (reading 'role')
+[2026-06-03 11:06:84] : INFO : Token generation successful
+[2026-06-03 11:06:84] : INFO : Refresh token generation successful
+[2026-06-03 11:06:84] : INFO : Login successful
+[2026-06-03 11:06:22] : INFO : customers data fetched
+[2026-06-03 11:06:60] : INFO : Token generation successful
+[2026-06-03 11:06:60] : INFO : Refresh token generation successful
+[2026-06-03 11:06:60] : INFO : Login successful
+[2026-06-03 11:06:28] : INFO : customers data fetched
+[2026-06-03 11:06:40] : INFO : customers data fetched
+[2026-06-03 11:06:90] : INFO : customers data fetched
+[2026-06-03 11:06:24] : INFO : Token generation successful
+[2026-06-03 11:06:24] : INFO : Refresh token generation successful
+[2026-06-03 11:06:24] : INFO : Login successful
+[2026-06-03 11:06:51] : INFO : customers data fetched
+[2026-06-03 11:06:59] : INFO : Token generation successful
+[2026-06-03 11:06:59] : INFO : Refresh token generation successful
+[2026-06-03 11:06:59] : INFO : Login successful
+[2026-06-03 11:06:19] : INFO : Token generation successful
+[2026-06-03 11:06:20] : INFO : Refresh token generation successful
+[2026-06-03 11:06:20] : INFO : Login successful
+[2026-06-03 11:06:82] : INFO : Token generation successful
+[2026-06-03 11:06:82] : INFO : Refresh token generation successful
+[2026-06-03 11:06:82] : INFO : Login successful
+[2026-06-03 11:06:05] : INFO : new Token generation successful
+[2026-06-03 11:06:07] : INFO : customers data fetched
+[2026-06-03 11:06:37] : INFO : Token generation successful
+[2026-06-03 11:06:37] : INFO : Refresh token generation successful
+[2026-06-03 11:06:37] : INFO : Login successful
+[2026-06-03 11:06:24] : INFO : new Token generation successful
+[2026-06-03 11:06:24] : INFO : customers data fetched

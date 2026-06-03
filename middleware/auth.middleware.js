@@ -1,7 +1,13 @@
-import { verifyRefreshToken, verifyToken } from "../service/auth.service.js";
+import {
+  generateToken,
+  verifyRefreshToken,
+  verifyToken,
+} from "../service/auth.service.js";
+import logger from "../service/log.service.js";
 
 const verifyAuthToken = async (req, res, next) => {
   try {
+    console.log("inside verifyAuthToken");
     const token = req.cookies.token;
     console.log(token, "inside verify Auth Token");
 
@@ -34,6 +40,22 @@ const verifyAuthToken = async (req, res, next) => {
       return res
         .status(400)
         .json({ message: "invalid credentials...refresh token is invalid" });
+    }
+    const newAccessToken = await generateToken({
+      id: refreshUser.id,
+      role: refreshUser.role,
+      phone_number: refreshUser.phone_number,
+    });
+    if (newAccessToken) {
+      res.cookie("token", newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 10, // 10 minutes
+      });
+      logger.info("new Token generation successful");
+    } else {
+      logger.error("new Token generation failed");
+      return res.status(400).json({ message: "new token generation failed" });
     }
     req.user = refreshUser;
     req.userId = refreshUser.id;
