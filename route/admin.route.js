@@ -12,7 +12,6 @@ import {
   getCategory,
   updateCategory,
 } from "../controller/admin.controller.js";
-import deleteAccessToken from "../middleware/temp.middleware.js";
 
 const router = express.Router();
 
