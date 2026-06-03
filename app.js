@@ -7,7 +7,9 @@ import { connectDB } from "./util/db.util.js";
 import { db } from "./util/db.util.js";
 import apiRoute from "./route/api.route.js";
 import cors_options from "./service/cors.service.js";
+
 const app = express();
+
 app.use(cors(cors_options));
 app.use(express.json());
 app.use(cookieParser());
