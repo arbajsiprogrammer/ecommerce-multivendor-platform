@@ -19,6 +19,7 @@ app.use("/api/v1", apiRoute);
 
 app.get("/", (req, res) => {
   res.send("Server is running");
+  res.status(200).json({ message: "Server is running" });
 });
 
 connectDB();
